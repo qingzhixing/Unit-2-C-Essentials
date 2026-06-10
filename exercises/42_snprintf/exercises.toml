@@ -1,0 +1,47 @@
+[[exercises]]
+name = "42_snprintf"
+title = "snprintf 格式化安全"
+unit = "unit2"
+lesson = 42
+order = 90
+mode = "stdout"
+source = "42_snprintf.c"
+lesson_url = "https://cnb.cool/q.qq/opencamp-c-2026-summer/Unit-2-C-Essentials/-/tree/main/lessons/42_snprintf"
+hint = '''
+snprintf 的安全用法和返回值语义。
+
+核心代码:
+    int ret = snprintf(buf, size, "Count: %d", n);
+    int truncated = (ret >= size);
+
+关键理解:
+- snprintf 返回"企图写入的字符数"（不含结尾 \\0）
+- 如果 ret >= size，说明被截断了
+- 被截断后，buf 中包含 size-1 个实际字符 + \\0
+
+实验:
+- 给定 char buf[10]，写入 "Count: 100"（共 10 个字符）
+- strlen(buf) = 9（实际写入 9 个字符，第 10 位放 \\0）
+- snprintf 返回值 = 10（本来想写 10 个字符）
+- 差值就是被截掉的字符数！
+
+为什么大厂严禁 sprintf？
+- sprintf 不检查边界 → 缓冲区溢出 → 安全漏洞
+
+思考:
+- ret 表示"想写多少"，strlen(buf) 表示"实际写了多少"
+- 如何通过 ret 判断是否发生截断？
+- 如果 size=0 调用 snprintf(buf, 0, ...) 会怎样？
+'''
+
+[[exercises.cases]]
+stdin = "100\n"
+stdout = "buf: 'Count: 10'\nlen: 9\nret: 10\ntruncated: yes\n"
+
+[[exercises.cases]]
+stdin = "5\n"
+stdout = "buf: 'Count: 5'\nlen: 8\nret: 8\ntruncated: no\n"
+
+[[exercises.cases]]
+stdin = "99999\n"
+stdout = "buf: 'Count: 99'\nlen: 9\nret: 12\ntruncated: yes\n"
