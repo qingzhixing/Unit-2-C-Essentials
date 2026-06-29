@@ -71,30 +71,45 @@ void list_free(struct node *head, int has_cycle) {
 /* 三指针反转：prev（已反转好的）、curr（当前）、next（下一个）
  * 每次把 curr->next 指向 prev，三个指针整体前移 */
 struct node *reverse(struct node *head) {
-#error TODO: Finish this exercise. Run "clings hint" for help.
+    struct node *prev = NULL;
+    struct node *curr = head;
     /* 初始化：prev = NULL, curr = head */
 
     /* while (curr) 循环：
      *   1. 保存下一个节点 next = curr->next
      *   2. 反转：curr->next = prev
      *   3. 前移：prev = curr; curr = next */
+    while (curr) {
+        struct node *next = curr->next;
+        curr->next = prev;
+        prev = curr;
+        curr = next;
+    }
 
     /* 返回 prev（它就是新 head） */
+    return prev;
 }
 
 /* Floyd 判圈：slow 每次走 1 步，fast 每次走 2 步
  * 如果有环，fast 会追上 slow */
 int has_cycle(struct node *head) {
-#error TODO: Finish this exercise. Run "clings hint" for help.
     /* 空链表无环 */
+    if (!head) return 0;
 
     /* slow 和 fast 都从 head 出发 */
+    struct node *slow = head;
+    struct node *fast = head;
 
     /* while (fast 和 fast->next 都非空) 循环：
      *   slow 走 1 步; fast 走 2 步
      *   如果 slow == fast → 相遇了 → 有环！ */
-
+    while (fast && fast->next) {
+        slow = slow->next;
+        fast = fast->next->next;
+        if (slow == fast) return 1; /* 有环 */
+    }
     /* fast 追到 NULL → 无环 */
+    return 0;
 }
 
 int main(void) {
@@ -109,11 +124,22 @@ int main(void) {
     struct node *tail;
     struct node *head = build_list(line, &tail);
 
-#error TODO: Finish this exercise. Run "clings hint" for help.
+    // Tips: 如果是cycle指令
     /* 如果有 cycle：
      *   制造环（tail->next = head），调用 has_cycle 检测并打印
      * 否则：
      *   调用 reverse 反转链表，打印结果 */
+    if (is_cycle) {
+        tail->next = head; /* 制造环 */
+        if (has_cycle(head)) {
+            printf("cycle detected\n");
+        } else {
+            printf("no cycle\n");
+        }
+    } else {
+        head = reverse(head);
+        list_print(head);
+    }
 
     list_free(head, is_cycle);
     return 0;
