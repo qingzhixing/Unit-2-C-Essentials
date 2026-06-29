@@ -53,17 +53,40 @@ struct node *build_tree(char *tokens) {
 /* 用队列实现层序遍历（BFS）
  * 与 Lesson 35 的队列思想相同，但队列中存的是 struct node* */
 void levelorder(struct node *root) {
-#error TODO: Finish this exercise. Run "clings hint" for help.
     /* 空树 → 直接返回 */
-
+    if (!root) return;
     /* 创建队列（struct node* 数组 + front/rear 索引） */
-
+    struct node *queue[MAX];
+    int front = 0, rear = 0; /* front == rear 表示队空 */
     /* 根节点入队 */
+    queue[rear++] = root;
+    rear %= MAX;
 
     /* while (队列非空) 循环：
      *   出队一个节点 → 打印它
      *   如果它有左孩子 → 左孩子入队
      *   如果它有右孩子 → 右孩子入队 */
+    int first_flag = 1;
+    while (front != rear) {
+        struct node *cur = queue[front++];
+        front %= MAX;
+
+        // Print space only before nodes after the first
+        if (first_flag)
+            first_flag = 0;
+        else
+            printf(" ");
+        printf("%c", cur->ch);
+
+        if (cur->left) {
+            queue[rear++] = cur->left;
+            rear %= MAX;
+        }
+        if (cur->right) {
+            queue[rear++] = cur->right;
+            rear %= MAX;
+        }
+    }
 
     /* 注意输出格式：空格分隔节点 */
 }
