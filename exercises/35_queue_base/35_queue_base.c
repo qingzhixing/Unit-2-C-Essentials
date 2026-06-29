@@ -25,20 +25,20 @@ int is_empty(void) { return front == rear; }
 
 /* 入队：把 val 存到 rear 位置，然后 rear 取模后移 */
 void enqueue(int val) {
-#error TODO: Finish this exercise. Run "clings hint" for help.
     /* 把 val 放进 queue[rear] */
-
+    queue[rear] = val;
     /* rear = (rear + 1) % MAX   — 取模实现环绕 */
+    rear = (rear + 1) % MAX;
 }
 
 /* 出队：从 front 位置取出值，然后 front 取模后移 */
 int dequeue(void) {
-#error TODO: Finish this exercise. Run "clings hint" for help.
     /* 从 queue[front] 取出值保存 */
-
+    int val = queue[front];
     /* front = (front + 1) % MAX   — 取模实现环绕 */
-
+    front = (front + 1) % MAX;
     /* 返回保存的值 */
+    return val;
 }
 
 int main(void) {
@@ -52,7 +52,13 @@ int main(void) {
         tok = strtok(NULL, " \n");
     }
 
-#error TODO: Finish this exercise. Run "clings hint" for help.
+    while (front != rear) {
+        printf("%d", dequeue());
+        if (front != rear) {
+            printf(" ");
+        }
+    }
+    printf("\n");
     /* 全部出队并打印，空格分隔，最后换行 */
 
     return 0;
