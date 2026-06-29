@@ -41,54 +41,84 @@ void inorder(struct node *root) {
 
 /* 找 BST 最小值：不断向左走，直到 left == NULL */
 struct node *find_min(struct node *root) {
-#error TODO: Finish this exercise. Run "clings hint" for help.
     /* 空树返回 NULL */
-
+    if (!root) return NULL;
     /* while (左孩子非空) → 向左移动 */
-
+    while (root->left) root = root->left;
     /* 返回最左节点 */
+    return root;
 }
 
 /* BST 插入：小于往左子树递归，大于往右子树递归 */
 struct node *bst_insert(struct node *root, int val) {
-#error TODO: Finish this exercise. Run "clings hint" for help.
     /* 到达空位置 → 创建新节点并返回 */
-
+    if (!root) {
+        return make_node(val);
+    }
     /* val < root->data → 递归插入左子树 */
-
-    /* val > root->data → 递归插入右子树 */
+    if (val < root->data) {
+        root->left = bst_insert(root->left, val);
+    } else {
+        /* val > root->data → 递归插入右子树 */
+        root->right = bst_insert(root->right, val);
+    }
 
     /* 返回 root */
+    return root;
 }
 
 /* BST 查找 */
 struct node *bst_search(struct node *root, int val) {
-#error TODO: Finish this exercise. Run "clings hint" for help.
     /* root == NULL 或 root->data == val → 返回 root */
-
+    if (!root || root->data == val) return root;
     /* val < root->data → 递归查找左子树 */
-
-    /* 否则 → 递归查找右子树 */
+    if (val < root->data) {
+        return bst_search(root->left, val);
+    } else {
+        /* 否则 → 递归查找右子树 */
+        return bst_search(root->right, val);
+    }
 }
 
 /* BST 删除 — 三种情况 */
 struct node *bst_delete(struct node *root, int val) {
-#error TODO: Finish this exercise. Run "clings hint" for help.
     /* root == NULL → 返回 NULL */
-
+    if (!root) return NULL;
     /* val < root->data → 递归删除左子树 */
-
-    /* val > root->data → 递归删除右子树 */
-
-    /* 找到要删的节点 (val == root->data)：
-     *   叶子: 无左右子 → free(root); return NULL
-     *   只有左子: tmp = root->left; free(root); return tmp
-     *   只有右子: tmp = root->right; free(root); return tmp
-     *   双子: min = find_min(root->right);
-     *         root->data = min->data;
-     *         root->right = bst_delete(root->right, min->data) */
-
+    if (val < root->data) {
+        root->left = bst_delete(root->left, val);
+    } else if (val > root->data) {
+        /* val > root->data → 递归删除右子树 */
+        root->right = bst_delete(root->right, val);
+    } else if (val == root->data) {
+        /* 找到要删的节点 (val == root->data)：
+         *   叶子: 无左右子 → free(root); return NULL
+         *   只有左子: tmp = root->left; free(root); return tmp
+         *   只有右子: tmp = root->right; free(root); return tmp
+         *   双子: min = find_min(root->right);
+         *         root->data = min->data;
+         *         root->right = bst_delete(root->right, min->data) */
+        if (!root->left && !root->right) {
+            free(root);
+            return NULL;
+        }
+        if (!root->right) {
+            struct node *tmp = root->left;
+            free(root);
+            return tmp;
+        }
+        if (!root->left) {
+            struct node *tmp = root->right;
+            free(root);
+            return tmp;
+        }
+        struct node *min = find_min(root->right);
+        root->data = min->data;
+        root->right = bst_delete(root->right, min->data);
+        return root;
+    }
     /* 返回 root */
+    return root;
 }
 
 int main(void) {
@@ -106,12 +136,41 @@ int main(void) {
         char *cmd = strtok(line, " ");
         if (!cmd) continue;
 
-#error TODO: Finish this exercise. Run "clings hint" for help.
         /* 根据 cmd 分发：
          *   "insert": 循环 tok = strtok(NULL, " ") 读数字，逐个 bst_insert
          *             最后 printf("inorder: "); inorder(root); printf("\n");
          *   "search": 读数字，bst_search，打印 found/not found
          *   "delete": 循环读数字，逐个 bst_delete，最后打印中序遍历结果 */
+        if (strcmp(cmd, "insert") == 0) {
+            char *tok;
+            while ((tok = strtok(NULL, " ")) != NULL) {
+                int val = atoi(tok);
+                root = bst_insert(root, val);
+            }
+            printf("inorder: ");
+            inorder(root);
+            printf("\n");
+        } else if (strcmp(cmd, "search") == 0) {
+            char *tok = strtok(NULL, " ");
+            if (tok) {
+                int val = atoi(tok);
+                struct node *found = bst_search(root, val);
+                if (found) {
+                    printf("found\n");
+                } else {
+                    printf("not found\n");
+                }
+            }
+        } else if (strcmp(cmd, "delete") == 0) {
+            char *tok;
+            while ((tok = strtok(NULL, " ")) != NULL) {
+                int val = atoi(tok);
+                root = bst_delete(root, val);
+            }
+            printf("inorder: ");
+            inorder(root);
+            printf("\n");
+        }
     }
     return 0;
 }
