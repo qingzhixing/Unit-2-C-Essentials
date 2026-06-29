@@ -10,6 +10,7 @@
  * 知识点: %[^:] 高级格式控制符、sscanf 返回值判断
  *
  * 验证：
+ *   Tips: 格式: host: %s\nport: %s\n
  *   stdin: "192.168.1.100:8080\n" → host: 192.168.1.100  port: 8080
  *   stdin: "localhost:3000\n"     → host: localhost      port: 3000
  *   stdin: "invalid\n"            → parse error
@@ -20,12 +21,12 @@
 /* 用 sscanf 解析 host:port 格式
  * 成功返回 1（host 和 port 通过参数传出），失败返回 0 */
 int parse_addr(const char *input, char *host, int *port) {
-#error TODO: Finish this exercise. Run "clings hint" for help.
     /* 关键: sscanf 的返回值 = 成功匹配并赋值的字段数
      * 如果成功匹配 2 个字段（host 和 port），返回 2
      * 格式: "%[^:]:%d" — host 读至冒号，跳过冒号，port 读整数 */
 
     /* return (成功匹配 2 个字段) */
+    return sscanf(input, "%[^:]:%d", host, port) == 2;
 }
 
 int main(void) {
@@ -36,7 +37,13 @@ int main(void) {
 
     char host[128];
     int port;
-#error TODO: Finish this exercise. Run "clings hint" for help.
+
+    int sucess = parse_addr(line, host, &port);
+    if (sucess) {
+        printf("host: %s\nport: %d\n", host, port);
+    } else {
+        printf("parse error\n");
+    }
     /* 调用 parse_addr，根据返回值输出 host 和 port 或 "parse error" */
     return 0;
 }
