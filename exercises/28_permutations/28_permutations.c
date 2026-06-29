@@ -14,6 +14,7 @@
  * 知识点: 递归、回溯（swap-递归-swap模式）、DFS 排列树
  *
  * 验证：
+ *   Tips: 每一行之间以\n分割
  *   stdin: "ABC\n"  → ABC ACB BAC BCA CBA CAB
  *   stdin: "AB\n"   → AB BA
  *   stdin: "A\n"    → A
@@ -30,16 +31,20 @@ void swap(char *a, char *b) {
 
 /* 全排列函数：输出字符串的所有排列 */
 void permute(char *str, int l, int r) {
-#error TODO: Finish this exercise. Run "clings hint" for help.
     /* 递归终止条件：l == r 时到达叶子节点，打印当前排列 */
-
+    if (l == r) {
+        printf("%s\n", str);
+        return;
+    }
     /* 枚举 i 从 l 到 r 的所有字符作为 l 位置的候选 */
-
-    /* 把候选换到固定位置：swap(&str[l], &str[i]) */
-
-    /* 递归处理 l+1 之后的子问题 */
-
-    /* 回溯：把候选换回来（恢复原状态，继续尝试下一个候选） */
+    for (int i = l; i <= r; i++) {
+        /* 把候选换到固定位置：swap(&str[l], &str[i]) */
+        swap(str + l, str + i);
+        /* 递归处理 l+1 之后的子问题 */
+        permute(str, l + 1, r);
+        /* 回溯：把候选换回来（恢复原状态，继续尝试下一个候选） */
+        swap(str + l, str + i);
+    }
 }
 
 int main(void) {
@@ -47,7 +52,8 @@ int main(void) {
     fgets(str, sizeof(str), stdin);
     int len = strlen(str);
     if (len > 0 && str[len - 1] == '\n') str[len - 1] = '\0';
-#error TODO: Finish this exercise. Run "clings hint" for help.
     /* 调用 permute(str, 0, strlen(str) - 1) */
+    // Tips: 这个地方可以直接去掉 #error
+    permute(str, 0, strlen(str) - 1);
     return 0;
 }
