@@ -17,20 +17,29 @@
 
 /* 迭代二分查找：在大小为 n 的有序数组 arr 中查找 target */
 int binary_search(int arr[], int n, int target) {
-#error TODO: Finish this exercise. Run "clings hint" for help.
     /* 初始化搜索范围：lo = 0, hi = n - 1 */
+    int lo = 0, hi = n - 1;
 
     /* while (lo <= hi) — 等号很重要！考虑只有1个元素时的情况 */
 
-    /* 计算中点：mid = lo + (hi - lo) / 2
-     * 为什么不用 (lo + hi) / 2？→ 避免整数溢出 */
-
-    /* 比较 arr[mid] 和 target：
-     *   等于 → 找到了，返回 mid
-     *   小于 → target 在右边，lo = mid + 1
-     *   大于 → target 在左边，hi = mid - 1 */
+    while (lo <= hi) {
+        /* 计算中点：mid = lo + (hi - lo) / 2
+         * 为什么不用 (lo + hi) / 2？→ 避免整数溢出 */
+        int mid = lo + (hi - lo) / 2;
+        /* 比较 arr[mid] 和 target：
+         *   等于 → 找到了，返回 mid
+         *   小于 → target 在右边，lo = mid + 1
+         *   大于 → target 在左边，hi = mid - 1 */
+        if (arr[mid] == target)
+            return mid;
+        else if (arr[mid] < target)
+            lo = mid + 1;
+        else
+            hi = mid - 1;
+    }
 
     /* 循环结束仍未找到 → 返回 -1 */
+    return -1;
 }
 
 int main(void) {
