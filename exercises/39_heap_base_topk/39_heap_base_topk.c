@@ -29,22 +29,28 @@ void swap(int *a, int *b) {
 /* 小顶堆下沉：确保以 i 为根的子树满足堆性质
  * 比较 i 和它的左右孩子，如果 i 不是最小的，与较小的孩子交换 */
 void heapify(int arr[], int n, int i) {
-#error TODO: Finish this exercise. Run "clings hint" for help.
     /* 假设 i 是最小的：smallest = i; l = 2*i+1; r = 2*i+2 */
-
+    int smallest = i;
+    int l = 2 * i + 1;
+    int r = 2 * i + 2;
     /* 如果左孩子在范围内且比 arr[smallest] 小 → smallest = l */
-
+    if (l < n && arr[smallest] > arr[l]) smallest = l;
     /* 如果右孩子在范围内且比 arr[smallest] 小 → smallest = r */
-
+    if (r < n && arr[smallest] > arr[r]) smallest = r;
     /* 如果 smallest != i：交换 arr[i] 和 arr[smallest]
      *   递归 heapify(arr, n, smallest) 继续下沉 */
+    if (smallest != i) {
+        swap(arr + i, arr + smallest);
+        heapify(arr, n, smallest);
+    }
 }
 
 /* 建堆：从最后一个非叶节点开始（n/2 - 1），向前逐个 heapify
  * 自底向上保证每个子树都是合法的小顶堆 */
 void build_heap(int arr[], int n) {
-#error TODO: Finish this exercise. Run "clings hint" for help.
-    /* for (i = n/2 - 1; i >= 0; i--) heapify(arr, n, i) */
+    for (int i = n / 2 - 1; i >= 0; i--) {
+        heapify(arr, n, i);
+    }
 }
 
 /* Top-K：用大小为 k 的小顶堆维护最大的 k 个数
@@ -53,22 +59,43 @@ void build_heap(int arr[], int n) {
  * 3. 堆中元素从大到小排序输出
  * 注意：需要动态分配大小为 k 的堆数组 */
 void top_k(int arr[], int n, int k) {
-#error TODO: Finish this exercise. Run "clings hint" for help.
     /* malloc 一个大小为 k 的堆数组 */
-
+    int *heap = NULL;
+    heap = malloc(sizeof(int) * k);
     /* 将 arr 的前 k 个元素拷入堆中 */
-
+    memcpy(heap, arr, k * sizeof(int));
     /* build_heap(heap, k) */
+    build_heap(heap, k);
 
     /* 遍历剩余元素 i = k..n-1：
      *   如果 arr[i] > heap[0]（比门槛大）：
      *     heap[0] = arr[i]; heapify(heap, k, 0) */
+    for (int i = k; i < n; i++) {
+        if (arr[i] > heap[0]) {
+            heap[0] = arr[i];
+            heapify(heap, k, 0);
+        }
+    }
 
     /* 堆中元素排序输出（从大到小）：
      *   for (i = k-1; i > 0; i--) { swap; heapify(heap, i, 0) }
      *   然后从后往前打印 k 个元素 */
+    for (int i = k - 1; i > 0; i--) {
+        // 把小元素放在最后面
+        swap(heap + 0, heap + i);
+        heapify(heap, i, 0);
+    }
+
+    /* 打印 k 个元素 */
+    for (int i = 0; i < k; i++) {
+        if (i != 0) printf(" ");
+        printf("%d", heap[i]);
+    }
+
+    printf("\n");
 
     /* free(heap) */
+    free(heap);
 }
 
 int main(void) {
