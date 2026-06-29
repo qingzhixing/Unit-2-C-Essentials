@@ -16,23 +16,31 @@
 #include <string.h>
 
 /* 实现 my_memcpy — void* 转为 char*，逐字节拷贝 */
+// Tip: 并返回 dest 字符串
 void *my_memcpy(void *dest, const void *src, size_t n) {
-#error TODO: Finish this exercise. Run "clings hint" for help.
     /* 将 void* 转为 char*，这样才能逐字节操作 */
-
     /* 逐字节拷贝：循环 n 次，每次拷贝一个字节 */
-
     /* 返回 dest */
+    char *dest_bits = (char *)dest;
+    char *src_bits = (char *)src;
+    for (size_t i = 0; i < n; i++) {
+        dest_bits[i] = src_bits[i];
+    }
+    return dest;
 }
 
 int main(void) {
     char src[256], dest[256] = {0};
-#error TODO: Finish this exercise. Run "clings hint" for help.
+
     /* 用 fgets 读一行到 src，去掉末尾的 '\n' */
+    fgets(src, sizeof(src), stdin);
+    src[strcspn(src, "\n")] = '\0';
 
     /* 调用 my_memcpy 将 src 拷贝到 dest（包括结尾 '\0'）。
      * 提示：要拷贝的字节数 = strlen(src) + 1（+1 是把 '\0' 也拷过去） */
+    my_memcpy(dest, src, strlen(src) + 1);
 
     /* printf 打印 dest，验证拷贝结果正确 */
+    printf("%s\n", dest);
     return 0;
 }
