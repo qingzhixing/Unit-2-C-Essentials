@@ -18,29 +18,51 @@
 #include <string.h>
 
 char *my_strstr(const char *haystack, const char *needle) {
-#error TODO: Finish this exercise. Run "clings hint" for help.
     /* 如果 needle 是空串，直接返回 haystack */
+    if (*needle == '\0') {
+        return haystack;
+    }
 
     /* 计算两个字符串的长度 */
+    int len_haystack = strlen(haystack);
+    int len_needle = strlen(needle);
 
     /* 外层循环：i 从 0 到 n-m。为什么必须用 <= 而不是 < ？
 
      * （提示：当模式串刚好在末尾时，i = n-m 正好对齐） */
-
-    /* 内层循环：逐字符比较 haystack[i+j] 和 needle[j]，不匹配则 break */
-
-    /* 如果内层循环完整跑完（j == m），说明从 i 位置完全匹配 */
+    for (int i = 0; i <= len_haystack - len_needle; i++) {
+        /* 内层循环：逐字符比较 haystack[i+j] 和 needle[j]，不匹配则 break */
+        int j = 0;
+        for (j = 0; j < len_needle; j++) {
+            if (haystack[i + j] != needle[j]) {
+                break;
+            }
+        }
+        if (j == len_needle) {
+            /* 如果内层循环完整跑完（j == m），说明从 i 位置完全匹配 */
+            return haystack + i;
+        }
+    }
 }
 
 int main(void) {
     char haystack[256], needle[256];
-#error TODO: Finish this exercise. Run "clings hint" for help.
     /* 用 fgets 从 stdin 读两行：haystack 和 needle */
+    fgets(haystack, sizeof(haystack), stdin);
+    fgets(needle, sizeof(needle), stdin);
 
     /* 去掉每行末尾的 '\n'（遍历到 '\n' 替换为 '\0'） */
     /* 注意：空行（直接回车）读到的是 "\n"，去掉后变成空串 */
+    haystack[strcspn(haystack, "\n")] = '\0';
+    needle[strcspn(needle, "\n")] = '\0';
 
     /* 调用 my_strstr，若返回值非 NULL 则打印 "found: " + 返回的字符串，
      * 否则打印 "not found" */
+    char *result = my_strstr(haystack, needle);
+    if (result) {
+        printf("found: %s\n", result);
+    } else {
+        printf("not found\n");
+    }
     return 0;
 }
