@@ -31,25 +31,27 @@ struct node *make_node(int val) {
 /* 头插法：新节点插入链表头部，成为新的 head
  * 提示：新节点的 next 指向原来的 head */
 struct node *insert_head(struct node *head, int val) {
-#error TODO: Finish this exercise. Run "clings hint" for help.
     /* 创建值为 val 的新节点 */
-
+    struct node *new_node = make_node(val);
     /* 新节点的 next 指向原来链表的第一个节点 */
-
+    new_node->next = head;
     /* 返回新节点（它就是新的 head） */
+    return new_node;
 }
 
 /* 尾插法：新节点插入链表尾部
  * 注意空链表特殊情况：head == NULL 时新节点就是 head */
 struct node *insert_tail(struct node *head, int val) {
-#error TODO: Finish this exercise. Run "clings hint" for help.
     /* 创建值为 val 的新节点 */
-
+    struct node *new_node = make_node(val);
     /* 如果链表为空（head == NULL），直接返回新节点 */
-
+    if (head == NULL) return new_node;
     /* 遍历到链表尾部：找到最后一个节点（它的 next == NULL） */
-
+    struct node *p = head;
+    while (p->next) p = p->next;
+    p->next = new_node;
     /* 把尾节点的 next 指向新节点；返回原来的 head（head 没变） */
+    return head;
 }
 
 void list_print(struct node *head) {
@@ -78,7 +80,15 @@ int main(void) {
     char *mode = strtok(line, " \n");
     struct node *head = NULL;
 
-#error TODO: Finish this exercise. Run "clings hint" for help.
+    char *number = NULL;
+    while ((number = strtok(NULL, " \n")) != NULL) {
+        int val = atoi(number);
+        if (strcmp(mode, "head") == 0) {
+            head = insert_head(head, val);
+        } else if (strcmp(mode, "tail") == 0) {
+            head = insert_tail(head, val);
+        }
+    }
     /* 循环读取后续数字 token（strtok(NULL, " \n")）
      * 每个数字转为 int，根据 mode 决定调用 insert_head 还是 insert_tail
      * 提示：strcmp(mode, "head") == 0 判断模式 */
