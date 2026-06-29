@@ -16,14 +16,14 @@
 #include <string.h>
 
 /* 实现 my_memcpy — void* 转为 char*，逐字节拷贝 */
-// Tip: 并返回 dest 字符串
+// Tip: 返回复制后内存的起始地址，即原dest
 void *my_memcpy(void *dest, const void *src, size_t n) {
     /* 将 void* 转为 char*，这样才能逐字节操作 */
     /* 逐字节拷贝：循环 n 次，每次拷贝一个字节 */
     /* 返回 dest */
     char *dest_bits = (char *)dest;
     char *src_bits = (char *)src;
-    for (size_t i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++) {
         dest_bits[i] = src_bits[i];
     }
     return dest;
