@@ -20,7 +20,7 @@
 char *my_strstr(const char *haystack, const char *needle) {
     /* 如果 needle 是空串，直接返回 haystack */
     if (*needle == '\0') {
-        return haystack;
+        return (char *)haystack;
     }
 
     /* 计算两个字符串的长度 */
@@ -40,9 +40,11 @@ char *my_strstr(const char *haystack, const char *needle) {
         }
         if (j == len_needle) {
             /* 如果内层循环完整跑完（j == m），说明从 i 位置完全匹配 */
-            return haystack + i;
+            return (char *)(haystack + i);
         }
     }
+    /* 如果没有找到匹配，返回 NULL */
+    return NULL;
 }
 
 int main(void) {
