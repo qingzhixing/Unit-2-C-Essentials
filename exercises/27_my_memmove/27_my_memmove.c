@@ -20,32 +20,53 @@
 #include <string.h>
 
 /* 实现 my_memmove — 判断 dest 与 src 的位置关系 */
+// Tip: 返回复制后内存的起始地址，即原dest
 void *my_memmove(void *dest, const void *src, size_t n) {
-#error TODO: Finish this exercise. Run "clings hint" for help.
     /* 将 dest 和 src 转为 char* 指针，方便逐字节操作 */
+    char *dest_bits = (char *)dest;
+    char *src_bits = (char *)src;
 
     /* 如果 dest == src 或 n == 0，直接返回 dest（无需拷贝） */
+    if (dest_bits == src_bits || n == 0) return dest;
 
     /* 情况 1：dest < src（目标在源左边，无重叠风险）
      *        正向拷贝——从前往后 */
+    if (dest_bits < src_bits) {
+        for (int i = 0; i < n; i++) {
+            dest_bits[i] = src_bits[i];
+        }
+        return dest;
+    }
 
     /* 情况 2：dest > src（目标在源右边，有重叠风险！）
      *        必须反向拷贝——从后往前
      *        想一想：如果正向会发生什么？后面的源数据被前面写入的目标覆盖了 */
+    if (dest_bits > src_bits) {
+        for (int i = n - 1; i >= 0; i--) {
+            dest_bits[i] = src_bits[i];
+        }
+        return dest;
+    }
 }
 
 int main(void) {
     char buf[256];
-#error TODO: Finish this exercise. Run "clings hint" for help.
+
     /* 用 fgets 读一行到 buf，去掉末尾 '\n' */
+    fgets(buf, sizeof(buf), stdin);
+    buf[strcspn(buf, "\n")] = '\0';
 
     /* 计算字符串长度 len = strlen(buf) */
+    int len = strlen(buf);
 
     /* 核心测试：将 buf[0..len-2] 拷贝到 buf[1..len-1]
      * 即相当于把整个字符串往右挪一位：
      *   "abcd" → "aabc"（第 2 个字符起是原来的前 3 个字符）
      * 这是 dest > src 的典型场景——必须用反向拷贝 */
+    my_memmove(buf + 1, buf, len - 1);
 
     /* 打印 buf */
+    printf("%s\n", buf);
+
     return 0;
 }
