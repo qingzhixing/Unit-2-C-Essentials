@@ -18,6 +18,7 @@
  *   stdin: "1 2 3 4 5\n" → 显示扩容过程 + values: 1 2 3 4 5
  *   stdin: "10 20\n"     → values: 10 20（无扩容）
  */
+// Tips: 扩容过程: #%d: cap %d -> %d [in-place] / [moved]
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -31,9 +32,9 @@ int main(void) {
 
     int cap = 2, size = 0, expansions = 0;
     int *arr = malloc(cap * sizeof(int));
-    printf("initial: %p (cap=%d)\n", (void *)arr, cap);
+    // Tips: 删掉这里
+    // printf("initial: %p (cap=%d)\n", (void *)arr, cap);
 
-#error TODO: Finish this exercise. Run "clings hint" for help.
     /* 用 strtok 遍历 line 中的数字：
      *   for each token:
      *     val = atoi(token)
@@ -52,8 +53,36 @@ int main(void) {
      *
      *     arr[size++] = val */
 
+    char *tok = strtok(line, " ");
+    int expand_turn = 0;
+    while (tok) {
+        int val = atoi(tok);
+        if (size >= cap) {
+            expand_turn++;
+            printf("#%d: cap %d -> %d ", expand_turn, cap, cap * 2);
+            cap *= 2;
+            uintptr_t old = (uintptr_t)arr;
+            int *tmp = realloc(arr, cap * sizeof(int));
+            if (tmp) {
+                if ((uintptr_t)tmp != old) {
+                    printf("[moved]\n");
+                } else {
+                    printf("[in-place]\n");
+                }
+                arr = tmp;
+                expansions++;
+            } else {
+                free(arr);
+                return 1;  // realloc 失败
+            }
+        }
+        arr[size++] = val;
+        tok = strtok(NULL, " ");
+    }
+
     /* 打印总结 */
-    printf("%d expansions, final cap=%d\n", expansions, cap);
+    // Tips: 这里的打印也要改
+    printf("expansions: %d\n", expansions);
     printf("values:");
     for (int i = 0; i < size; i++) printf(" %d", arr[i]);
     printf("\n");
