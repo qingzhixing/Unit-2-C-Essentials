@@ -23,12 +23,14 @@ int cmp_int(const void *a, const void *b) { return *(const int *)a - *(const int
 
 /* 字符串比较器 — 注意二级指针！ */
 int cmp_str(const void *a, const void *b) {
-#error TODO: Finish this exercise. Run "clings hint" for help.
     /* 先把 void* 强转为 const char**，再解引用得到 const char*
      * sa = *(const char **)a
      * sb = *(const char **)b */
+    const char *sa = *(const char **)a;
+    const char *sb = *(const char **)b;
 
     /* strcmp(sa, sb) 比较两个字符串 */
+    return strcmp(sa, sb);
 }
 
 int main(void) {
@@ -40,7 +42,6 @@ int main(void) {
     /* 第一个 token 是模式: "int" 或 "str" */
     char *mode = strtok(line, " ");
 
-#error TODO: Finish this exercise. Run "clings hint" for help.
     /* 若 mode == "int":
      *   解析后续数字到 int arr[64]
      *   qsort(arr, n, sizeof(int), cmp_int)
@@ -50,6 +51,37 @@ int main(void) {
      *   将后续每个 token 的地址存入 char *strs[64]（不需要拷贝！直接用 token 指针）
      *   qsort(strs, n, sizeof(char *), cmp_str)
      *   打印 "strings: S1 S2 ..." */
-
-    return 0;
+    if (strcmp(mode, "int") == 0) {
+        int arr[64];
+        int n = 0;
+        char *tok;
+        tok = strtok(NULL, " ");
+        while (tok != NULL) {
+            arr[n++] = atoi(tok);
+            tok = strtok(NULL, " ");
+        }
+        qsort(arr, n, sizeof(int), cmp_int);
+        printf("ints: ");
+        for (int i = 0; i < n; i++) {
+            if (i > 0) printf(" ");
+            printf("%d", arr[i]);
+        }
+        printf("\n");
+    } else if (strcmp(mode, "str") == 0) {
+        char *strs[64];
+        int n = 0;
+        char *tok;
+        tok = strtok(NULL, " ");
+        while (tok != NULL) {
+            strs[n++] = tok;
+            tok = strtok(NULL, " ");
+        }
+        qsort(strs, n, sizeof(char *), cmp_str);
+        printf("strings: ");
+        for (int i = 0; i < n; i++) {
+            if (i > 0) printf(" ");
+            printf("%s", strs[i]);
+        }
+        printf("\n");
+    }
 }
