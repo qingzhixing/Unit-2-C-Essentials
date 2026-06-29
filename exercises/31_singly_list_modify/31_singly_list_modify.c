@@ -74,38 +74,60 @@ void list_free(struct node *head) {
 
 /* 按值查找：遍历链表，找到第一个 data == val 的节点 */
 struct node *find_by_value(struct node *head, int val) {
-#error TODO: Finish this exercise. Run "clings hint" for help.
     /* 从 head 开始，逐个检查节点的 data 是否等于 val */
-
+    while (head) {
+        if (head->data == val) return head;
+        head = head->next;
+    }
     /* 找到就返回该节点；遍历完还没找到返回 NULL */
+    return NULL;
 }
 
 /* 按索引查找（0-based）：返回第 idx 个节点（首节点 idx=0） */
 struct node *find_by_index(struct node *head, int idx) {
-#error TODO: Finish this exercise. Run "clings hint" for help.
     /* 从头开始，每次移动指针同时计数 */
-
+    int count = 0;
+    while (head) {
+        if (!head->next) break;
+        if (count == idx) return head;
+        head = head->next;
+        count++;
+    }
     /* 索引越界（idx 超出链表长度）时返回 NULL */
+    return NULL;
 }
 
 /* 按值删除：删除第一个匹配节点
  * 关键技巧：维护前驱指针 prev，这样才能从 prev->next 跳过被删节点
  * 特别注意：如果被删的是头节点，需要返回新的 head */
 struct node *delete_node(struct node *head, int val) {
-#error TODO: Finish this exercise. Run "clings hint" for help.
     /* 空链表：返回 NULL */
-
+    if (!head) return NULL;
     /* 头节点就是目标：保存 head->next，free(head)，返回新 head */
-
+    if (head->data == val) {
+        struct node *new_head = head->next;
+        free(head);
+        return new_head;
+    }
     /* 维护两个指针：prev（前驱）、cur（当前），从 prev=head, cur=head->next 开始 */
-
+    struct node *prev = head;
+    struct node *cur = head->next;
     /* 遍历到 cur == NULL 或找到目标：
 
      *   如果找到：prev->next = cur->next; free(cur); 跳出
 
      *   否则：prev = cur; cur = cur->next */
-
+    while (cur) {
+        if (cur->data == val) {
+            prev->next = cur->next;
+            free(cur);
+            break;
+        }
+        prev = cur;
+        cur = cur->next;
+    }
     /* 返回 head */
+    return head;
 }
 
 int main(void) {
@@ -127,11 +149,28 @@ int main(void) {
     int val;
     sscanf(cmd, "%s %d", op, &val);
 
-#error TODO: Finish this exercise. Run "clings hint" for help.
     /* 根据 op 分发：
      *   "find"   → find_by_value → 打印 found: N 或 not found
      *   "index"  → find_by_index → 打印 at idx: N 或 out of range
      *   "delete" → delete_node    → list_print(head) */
+    if (strcmp(op, "find") == 0) {
+        struct node *found = find_by_value(head, val);
+        if (found) {
+            printf("found: %d\n", found->data);
+        } else {
+            printf("not found\n");
+        }
+    } else if (strcmp(op, "index") == 0) {
+        struct node *found = find_by_index(head, val);
+        if (found) {
+            printf("at %d: %d\n", val, found->data);
+        } else {
+            printf("out of range\n");
+        }
+    } else if (strcmp(op, "delete") == 0) {
+        head = delete_node(head, val);
+        list_print(head);
+    }
 
     list_free(head);
     return 0;
