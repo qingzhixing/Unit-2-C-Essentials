@@ -9,6 +9,7 @@
  *         strtok 通过写入 \0 修改原字符串——传入只读常量区会段错误
  *
  * 验证：
+ *   Tips: 输出格式为 argv[%d]: %s
  *   stdin: "ls -l -a /tmp\n"     → argc: 4  argv: ls -l -a /tmp
  *   stdin: "echo   hello\n"      → argc: 2  （连续空格不产生空 token）
  *   stdin: "gcc\t-Wall\tmain.c\n" → argc: 3  （tab 分隔）
@@ -26,7 +27,13 @@ int main(void) {
     char *argv[64], *saveptr;
     int argc = 0;
 
-#error TODO: Finish this exercise. Run "clings hint" for help.
+    char *tok;
+    tok = strtok_r(line, " \t", &saveptr);
+    while (tok != NULL) {
+        argv[argc++] = tok;
+        tok = strtok_r(NULL, " \t", &saveptr);
+    }
+
     /* 用 strtok_r 按 " \t" 切分 line：
      *   第一次: tok = strtok_r(line, " \t", &saveptr)
      *   之后: tok = strtok_r(NULL, " \t", &saveptr)
@@ -36,5 +43,9 @@ int main(void) {
      * （相比之下 strtok 用静态变量保存状态 → 多线程会互相干扰） */
 
     /* 打印 argc 和所有 argv */
+    printf("argc: %d\n", argc);
+    for (int i = 0; i < argc; i++) {
+        printf("argv[%d]: %s\n", i, argv[i]);
+    }
     return 0;
 }
