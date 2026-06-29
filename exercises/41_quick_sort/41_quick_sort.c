@@ -29,26 +29,36 @@ void swap(int *a, int *b) {
  * - j 扫描 [lo, hi)，遇到 ≤ pivot 的元素就交换到左边
  * - 最后把 pivot 放到正确位置 (i+1) */
 int partition(int arr[], int lo, int hi) {
-#error TODO: Finish this exercise. Run "clings hint" for help.
     /* 选 pivot = arr[hi]; i = lo - 1 */
+    int pivot = arr[hi];
+    int i = lo - 1;
 
     /* for j = lo; j < hi; j++：
      *   如果 arr[j] <= pivot：
      *      i++; swap(&arr[i], &arr[j]) */
+    for (int j = lo; j < hi; j++) {
+        if (arr[j] <= pivot) {
+            i++;
+            swap(&arr[i], &arr[j]);
+        }
+    }
 
-    /* 把 pivot 放到中间：swap(&arr[i+1], &arr[hi]); return i+1 */
+    swap(arr + i + 1, arr + hi);
+    return i + 1;
 }
 
 /* 递归快排 */
 void quicksort(int arr[], int lo, int hi) {
-#error TODO: Finish this exercise. Run "clings hint" for help.
     /* 终止条件：lo >= hi → return */
+    if (lo >= hi) return;
 
     /* 分区，得到 pivot 位置 p = partition(arr, lo, hi) */
+    int p = partition(arr, lo, hi);
 
     /* 递归排左半：quicksort(arr, lo, p-1) */
-
+    quicksort(arr, lo, p - 1);
     /* 递归排右半：quicksort(arr, p+1, hi) */
+    quicksort(arr, p + 1, hi);
 }
 
 int main(void) {
