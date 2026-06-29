@@ -40,6 +40,7 @@ int is_safe(int row, int c) {
         /* 检测 2：对角线冲突 — 行列差的绝对值相等 */
         if (abs(col[i] - c) == abs(row - i)) return 0;
     } /* 都通过则安全，返回 1 */
+    return 1;
 }
 
 /* 回溯求解：回溯 + 剪枝 逐行放置皇后 */
