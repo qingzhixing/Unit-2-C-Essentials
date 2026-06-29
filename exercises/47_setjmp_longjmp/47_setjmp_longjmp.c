@@ -24,12 +24,12 @@ jmp_buf env;
 
 /* funcC — 如果输入是 "error"，调用 longjmp 跳回 main */
 void funcC(const char *input) {
-#error TODO: Finish this exercise. Run "clings hint" for help.
     /* 如果 !strcmp(input, "error") → longjmp(env, 1)
      *   （这个 longjmp 会导致程序直接跳回 setjmp 的位置，
      *    而且 funcC、funcB、funcA 的剩余代码都不会执行！） */
-
+    if (!strcmp(input, "error")) longjmp(env, 1);
     /* 正常情况：printf("funcC: %s\n", input) */
+    printf("funcC: %s\n", input);
 }
 
 void funcB(const char *input) {
@@ -47,14 +47,20 @@ int main(void) {
     int len = strlen(line);
     if (len > 0 && line[len - 1] == '\n') line[len - 1] = '\0';
 
-#error TODO: Finish this exercise. Run "clings hint" for help.
     /* int r = setjmp(env)
      * 如果 r == 0（初次设置）：
      *   调用 funcA(line)
      *   打印 success
      * 如果 r != 0（从 longjmp 跳回）：
-     *   打印 caught error
+     *   Tips:
+     *   打印 caught error: %s
      * 注意: 传入 longjmp 的值（这里是 1）会成为 setjmp 的返回值 */
-
+    int r = setjmp(env);
+    if (r == 0) {
+        funcA(line);
+        printf("success: %s\n", line);
+    } else {
+        printf("caught error: %s\n", line);
+    }
     return 0;
 }
