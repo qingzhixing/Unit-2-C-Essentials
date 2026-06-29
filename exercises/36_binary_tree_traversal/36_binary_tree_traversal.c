@@ -58,38 +58,41 @@ struct node *build_tree(char *tokens) {
 
 /* 前序遍历：根 → 左 → 右 */
 void preorder(struct node *root) {
-#error TODO: Finish this exercise. Run "clings hint" for help.
     /* 空节点 → return */
-
+    if (!root) return;
     /* 打印当前节点（根） */
-
+    printf("%c ", root->ch);
     /* 递归左子树 */
-
+    preorder(root->left);
     /* 递归右子树 */
+    preorder(root->right);
 }
 
 /* 中序遍历：左 → 根 → 右 */
 void inorder(struct node *root) {
-#error TODO: Finish this exercise. Run "clings hint" for help.
     /* 空节点 → return */
-
+    if (!root) return;
     /* 递归左子树 */
-
+    preorder(root->left);
     /* 打印当前节点（根） */
-
+    printf("%c ", root->ch);
     /* 递归右子树 */
+    preorder(root->right);
 }
 
 /* 后序遍历：左 → 右 → 根 */
 void postorder(struct node *root) {
-#error TODO: Finish this exercise. Run "clings hint" for help.
     /* 空节点 → return */
+    if (!root) return;
 
     /* 递归左子树 */
+    preorder(root->left);
 
     /* 递归右子树 */
+    preorder(root->right);
 
     /* 打印当前节点（根） */
+    printf("%c ", root->ch);
 }
 
 int main(void) {
