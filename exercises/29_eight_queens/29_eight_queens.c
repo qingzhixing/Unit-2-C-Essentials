@@ -33,24 +33,31 @@ int col[8]; /* col[row] = 皇后在第 row 行所在的列 */
 /* 判断在第 row 行第 c 列放置皇后是否安全
  * 需要检测：与前面 0..row-1 行是否有同列或同对角线冲突 */
 int is_safe(int row, int c) {
-#error TODO: Finish this exercise. Run "clings hint" for help.
     /* 遍历已经放置好的第 0 到 row-1 行 */
-
-    /* 检测 1：同列冲突 — 新皇后和已有皇后在同一列 */
-
-    /* 检测 2：对角线冲突 — 行列差的绝对值相等 */
-
-    /* 都通过则安全，返回 1 */
+    for (int i = 0; i <= row - 1; i++) {
+        /* 检测 1：同列冲突 — 新皇后和已有皇后在同一列 */
+        if (col[i] == c) return 0;
+        /* 检测 2：对角线冲突 — 行列差的绝对值相等 */
+        if (abs(col[i] - c) == abs(row - i)) return 0;
+    } /* 都通过则安全，返回 1 */
 }
 
 /* 回溯求解：回溯 + 剪枝 逐行放置皇后 */
 void solve(int row) {
-#error TODO: Finish this exercise. Run "clings hint" for help.
     /* 终止条件：所有 8 行都放好了 → 找到一个解，计数 +1 */
-
+    if (row == 8) {
+        count++;
+        return;
+    }
     /* 枚举当前行的每一列 c ∈ [0, 7] */
-
-    /* 如果 (row, c) 安全 → 放置，递归处理下一行 */
+    for (int c = 0; c <= 7; c++) {
+        /* 如果 (row, c) 安全 → 放置，递归处理下一行 */
+        if (is_safe(row, c)) {
+            col[row] = c;   /* 放置皇后 */
+            solve(row + 1); /* 递归处理下一行 */
+            col[row] = 0;
+        }
+    }
 }
 
 int main(void) {
