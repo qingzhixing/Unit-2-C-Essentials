@@ -32,28 +32,38 @@ struct node *make_node(int val) {
 
 /* 循环链表插入：首节点自环，后续节点插在 cur 之后，返回新节点（作为新 cursor） */
 struct node *clist_insert(struct node *cur, int val) {
-#error TODO: Finish this exercise. Run "clings hint" for help.
     /* 创建新节点 p */
-
+    struct node *p = make_node(val);
     /* 如果是第一个节点（cur == NULL）：p 指向自己（自环） */
-
-    /* 否则：插在 cur 之后（p->next = cur->next; cur->next = p） */
-
+    if (!cur) {
+        p->next = p;
+    } else {
+        /* 否则：插在 cur 之后（p->next = cur->next; cur->next = p） */
+        p->next = cur->next;
+        cur->next = p;
+    }
     /* 返回 p（新节点成为新的 cursor） */
+    return p;
 }
 
 /* 循环链表删除：删除 item，返回后继节点（淘汰后下一轮从这里开始） */
 struct node *clist_delete(struct node *item) {
-#error TODO: Finish this exercise. Run "clings hint" for help.
     /* 空节点返回 NULL */
-
+    if (!item) return NULL;
     /* 唯一节点（item->next == item）：free(item) 后返回 NULL */
-
+    if (item->next == item) {
+        free(item);
+        return NULL;
+    }
     /* 找到 item 的前驱节点：从 item 出发，一直找直到 next == item */
-
+    struct node *prev = item;
+    while (prev->next != item) prev = prev->next;
     /* 前驱跳过 item：prev->next = item->next; free(item)
 
      * 返回 item->next（被删节点的后继，作为下一轮的起点） */
+    prev->next = item->next;
+    free(item);
+    return prev->next;
 }
 
 int main(void) {
@@ -68,7 +78,6 @@ int main(void) {
     /* 移到第一个节点作为起点 */
     cursor = cursor->next;
 
-#error TODO: Finish this exercise. Run "clings hint" for help.
     /* 约瑟夫环淘汰过程：
      *   while (cursor != NULL) {
      *       走 K-1 步（因为当前站的那个人已经算 1 了）
@@ -76,6 +85,20 @@ int main(void) {
      *       删除节点，cursor 指向后继
      *       适当控制空格分隔
      *   } */
+
+    while (cursor) {
+        for (int i = 1; i < K; i++) {
+            cursor = cursor->next;
+        }
+
+        printf("%d", cursor->data);
+
+        cursor = clist_delete(cursor);
+
+        if (cursor) {
+            printf(" ");
+        }
+    }
 
     printf("\n");
     return 0;
